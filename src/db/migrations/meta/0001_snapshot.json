@@ -1,0 +1,118 @@
+{
+  "id": "f601b551-c3ba-42a9-ae51-63a72e5ff19f",
+  "prevId": "4f3a0d77-fb56-49fe-b41d-eca48493ee32",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.instruments": {
+      "name": "instruments",
+      "schema": "",
+      "columns": {
+        "ticker": {
+          "name": "ticker",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "series": {
+          "name": "series",
+          "type": "char(2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "bond_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "couponRate": {
+          "name": "couponRate",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "faceValue": {
+          "name": "faceValue",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lastTradePrice": {
+          "name": "lastTradePrice",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "percentChange": {
+          "name": "percentChange",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "volume": {
+          "name": "volume",
+          "type": "numeric(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "valueInCrores": {
+          "name": "valueInCrores",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creditRating": {
+          "name": "creditRating",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "maturityDate": {
+          "name": "maturityDate",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "instruments_ticker_series_pk": {
+          "name": "instruments_ticker_series_pk",
+          "columns": [
+            "ticker",
+            "series"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.bond_type_enum": {
+      "name": "bond_type_enum",
+      "schema": "public",
+      "values": [
+        "Regular",
+        "Zero-Coupon",
+        "Floating",
+        "Other"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

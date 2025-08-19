@@ -3,34 +3,43 @@ import { Badge } from "@/components/ui/badge";
 import { db } from "@/db/conn";
 import { instrumentsTable } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
+import { Order } from "@/components/order";
 
 export default async function InstrumentDetailPage({
     searchParams,
 }: {
-    searchParams: { ticker: string; series: string };
+    searchParams: Promise<{ ticker: string; series: string }>;
 }) {
-    const ticker = searchParams.ticker;
-    const series = searchParams.series;
+    const { ticker, series } = await searchParams;
+
 
     const [data] = await db
         .select()
         .from(instrumentsTable)
         .where(
             and(eq(instrumentsTable.ticker, ticker), eq(instrumentsTable.series, series))
-        )
+        );
 
     return (
         <div className="p-6 space-y-6 max-w-5xl mx-auto mt-28">
             {/* Header */}
             <Card>
-                <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                    <div>
+                <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div className="flex flex-row md:items-center md:gap-4">
                         <CardTitle className="text-2xl font-bold">
                             {data.ticker} <span className="text-gray-500">({data.series})</span>
                         </CardTitle>
-                        <p className="text-sm text-gray-500 mt-1">{data.type}</p>
+                        {data.creditRating && (
+                            <Badge variant="outline" className="mt-2 md:mt-0">
+                                {data.creditRating}
+                            </Badge>
+                        )}
                     </div>
-                    <Badge variant="outline">{data.creditRating}</Badge>
+
+                    <div className="grid grid-cols-2 gap-2 mt-4 md:mt-0 w-full md:w-fit">
+                        <Order series={series} ticker={ticker} type="buy" />
+                        <Order series={series} ticker={ticker} type="sell" />
+                    </div>
                 </CardHeader>
             </Card>
 
@@ -42,6 +51,9 @@ export default async function InstrumentDetailPage({
                         <CardTitle>Bond Details</CardTitle>
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-4 text-sm">
+                        <p className="text-gray-500">Type</p>
+                        <p>{data.type}</p>
+
                         <p className="text-gray-500">Coupon Rate</p>
                         <p>{data.couponRate}%</p>
 

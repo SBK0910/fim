@@ -1,11 +1,12 @@
 import { db } from "@/db/conn";
 import { instrumentsTable } from "@/db/schema";
+import { count } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
 	try {
-		const url = new URL(req.url)
-		const page = parseInt(url.searchParams.get("page") || "1")
+		const url = new URL(req.url);
+		const page = parseInt(url.searchParams.get("page") || "1");
 		const limit = parseInt(url.searchParams.get("limit") || "10");
 
 		if (page < 1 || limit < 1) {
@@ -17,6 +18,13 @@ export async function GET(req: NextRequest) {
 
 		const offset = (page - 1) * limit;
 
+		// Get total count
+		const countResult = await db
+			.select({ count: count() })
+			.from(instrumentsTable);
+		const total = countResult[0]?.count ?? 0;
+
+		// Fetch paginated instruments
 		const instruments = await db
 			.select()
 			.from(instrumentsTable)
@@ -24,7 +32,16 @@ export async function GET(req: NextRequest) {
 			.offset(offset);
 
 		return NextResponse.json(
-			{ success: true, data: instruments },
+			{
+				success: true,
+				data: instruments,
+				pagination: {
+					page,
+					limit,
+					total,
+					totalPages: Math.ceil(total / limit),
+				},
+			},
 			{ status: 200 }
 		);
 	} catch (error) {

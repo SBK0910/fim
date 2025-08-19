@@ -15,6 +15,13 @@
       "when": 1755253140727,
       "tag": "0001_powerful_zarek",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1755610009442,
+      "tag": "0002_legal_talon",
+      "breakpoints": true
     }
   ]
 }

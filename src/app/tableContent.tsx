@@ -16,6 +16,7 @@ import { useMemo, useState } from "react";
 import { Pagination, PaginationContent, PaginationItem } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 export default function TableContent() {
     const [pagination, setPagination] = useState({
@@ -42,6 +43,8 @@ export default function TableContent() {
     });
 
     const skeletonRows = Array.from({ length: 5 });
+
+    const router = useRouter()
 
     return (
         <div className="flex flex-col items-center w-full">
@@ -75,7 +78,11 @@ export default function TableContent() {
                             ))
                             : table.getRowModel().rows.length
                                 ? table.getRowModel().rows.map(row => (
-                                    <TableRow key={row.id}>
+                                    <TableRow key={row.id} onClick={
+                                        (() => {
+                                            router.push(`/instrument?ticker=${row.original.ticker}&series=${row.original.series}`)
+                                        })
+                                    }>
                                         {row.getVisibleCells().map(cell => (
                                             <TableCell key={cell.id}>
                                                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -97,7 +104,7 @@ export default function TableContent() {
             {/* Pagination */}
             <div className="flex flex-row items-right mt-4 w-full gap-3">
                 <Select defaultValue={`${pagination.pageSize}`} onValueChange={(val) => {
-                    setPagination(prev => ({...prev, pageSize: parseInt(val,10)}))
+                    setPagination(prev => ({ ...prev, pageSize: parseInt(val, 10) }))
                 }}>
                     <SelectTrigger>
                         <SelectValue />

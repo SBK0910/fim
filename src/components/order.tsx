@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from "react"
 import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
@@ -38,8 +39,9 @@ export function Order({ ticker, series, side }: BuyProps) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    const currentFullPath = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '')
+    const [open, setOpen] = useState(false);
 
+    const currentFullPath = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '')
 
     const form = useForm<z.infer<typeof orderFormSchema>>({
         resolver: zodResolver(orderFormSchema),
@@ -73,6 +75,7 @@ export function Order({ ticker, series, side }: BuyProps) {
             )
 
             form.reset()
+            setOpen(false) // ✅ close dialog here
         } catch (err) {
             console.error("Order error:", err)
             toast.error("Unexpected error, please try again later.")
@@ -82,7 +85,7 @@ export function Order({ ticker, series, side }: BuyProps) {
     if (!isLoaded) return null;
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button
                     className={`font-semibold tracking-tight ${side === "buy"

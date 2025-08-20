@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { orderFormSchema } from "@/schemas/schema";
+import { orderFormSchema } from "@/lib/schema";
 import { z } from "zod";
 import {
     Form,

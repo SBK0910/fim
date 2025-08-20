@@ -58,18 +58,19 @@ export default function Header() {
                 )}
             </div>
 
-            {/* Auth page back button */}
             {isAuthPage && (
-                <Link href="/">
-                    <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label="Back to Home"
-                        className="cursor-pointer"
-                    >
-                        <ArrowLeft className="w-5 h-5 hover:text-primary transition-colors" />
-                    </Button>
-                </Link>
+                <div className='mr-auto'>
+                    <Link href="/">
+                        <Button
+                            size="icon"
+                            variant="ghost"
+                            aria-label="Back to Home"
+                            className="cursor-pointer"
+                        >
+                            <ArrowLeft className="w-5 h-5 hover:text-primary transition-colors" />
+                        </Button>
+                    </Link>
+                </div>
             )}
         </header>
     );

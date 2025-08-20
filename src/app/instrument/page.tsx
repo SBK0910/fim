@@ -25,11 +25,11 @@ export default async function InstrumentDetailPage({
   const isPositiveChange = data.percentChange >= 0
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pt-20">
       <div className="container mx-auto px-4 py-8 space-y-6 max-w-6xl">
         
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-6 border-b">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <h1 className="text-3xl font-bold">{data.ticker}</h1>
@@ -60,7 +60,7 @@ export default async function InstrumentDetailPage({
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <Order series={series} ticker={ticker} side="buy" />
             <Order series={series} ticker={ticker} side="sell" />
           </div>
@@ -154,12 +154,6 @@ export default async function InstrumentDetailPage({
                 <p className="text-sm text-muted-foreground mb-1">Market Value</p>
                 <p className="text-lg font-semibold">₹{data.valueInCrores} Cr</p>
               </div>
-              {data.creditRating && (
-                <div>
-                  <p className="text-sm text-muted-foreground mb-1">Credit Rating</p>
-                  <Badge variant="secondary" className="text-sm">{data.creditRating}</Badge>
-                </div>
-              )}
             </CardContent>
           </Card>
         </div>

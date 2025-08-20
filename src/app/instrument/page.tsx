@@ -27,7 +27,11 @@ export default async function InstrumentDetailPage({ searchParams }: {
                             {data.ticker} <span className="text-gray-500">({data.series})</span>
                         </CardTitle>
                         {data.creditRating && (
-                            <Badge variant="outline" className="mt-2 md:mt-0">
+                            <Badge
+                                variant="outline"
+                                className="mt-2 md:mt-0 inline-block max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis"
+                                title={data.creditRating}
+                            >
                                 {data.creditRating}
                             </Badge>
                         )}

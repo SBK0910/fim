@@ -13,9 +13,53 @@ export default function Header() {
     const isAuthPage = pathname === '/auth';
 
     return (
-        <header className="fixed top-4 right-4 left-4 z-50 flex justify-between">
-            {isAuthPage ? (
-                // Back to home button on the left
+        <header className="fixed top-0 left-4 right-4 z-50 flex justify-between items-center border-b border-gray-200 dark:border-gray-700 bg-background p-3">
+            {/* Left side: Market & Orders links */}
+            {!isAuthPage && (
+                <div className="flex items-center gap-2">
+                    <Link href="/">
+                        <Button size="sm" variant="ghost" className='cursor-pointer'>
+                            Market
+                        </Button>
+                    </Link>
+                    <Link href="/orders">
+                        <Button size="sm" variant="ghost" className='cursor-pointer'>
+                            Orders
+                        </Button>
+                    </Link>
+                </div>
+            )}
+
+            {/* Right side: Settings & Theme */}
+            <div className="flex items-center gap-2">
+                {!isAuthPage && (
+                    <>
+                        <Link href="/auth">
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="hover:text-primary transition-colors"
+                                aria-label="Settings"
+                            >
+                                <Settings2 className="w-5 h-5" />
+                            </Button>
+                        </Link>
+
+                        <Button
+                            size="icon"
+                            variant="ghost"
+                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                            aria-label="Toggle Theme"
+                            className="hover:text-primary transition-colors"
+                        >
+                            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                        </Button>
+                    </>
+                )}
+            </div>
+
+            {/* Auth page back button */}
+            {isAuthPage && (
                 <Link href="/">
                     <Button
                         size="icon"
@@ -26,40 +70,6 @@ export default function Header() {
                         <ArrowLeft className="w-5 h-5 hover:text-primary transition-colors" />
                     </Button>
                 </Link>
-            ) : (
-                // Empty placeholder to keep layout consistent
-                <div />
-            )}
-
-            {!isAuthPage && (
-                <div className="flex items-center gap-0 bg-accent rounded-md">
-                    {/* Settings Icon */}
-                    <Link href="/auth">
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="hover:text-primary transition-colors cursor-pointer"
-                            aria-label="Settings"
-                        >
-                            <Settings2 className="w-5 h-5 cursor-pointer" />
-                        </Button>
-                    </Link>
-
-                    {/* Theme Toggle */}
-                    <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                        aria-label="Toggle Theme"
-                        className="cursor-pointer"
-                    >
-                        {theme === 'dark' ? (
-                            <Sun className="w-5 h-5 hover:text-primary transition-colors cursor-pointer" />
-                        ) : (
-                            <Moon className="w-5 h-5 hover:text-primary transition-colors cursor-pointer" />
-                        )}
-                    </Button>
-                </div>
             )}
         </header>
     );

@@ -24,6 +24,7 @@ import {
 } from "./ui/select";
 import { useAuth } from "@clerk/nextjs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 type BuyProps = {
     ticker: string;
@@ -53,11 +54,31 @@ export function Order({ ticker, series, side }: BuyProps) {
 
     const orderType = form.watch("type");
 
-    function onSubmit(values: z.infer<typeof orderFormSchema>) {
-        console.log("Submitting order:", values);
+    async function onSubmit(values: z.infer<typeof orderFormSchema>) {
+        try {
+            const res = await fetch("/api/order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(values),
+            })
+
+            if (!res.ok) {
+                const error = await res.json()
+                toast.error(error.error || "Something went wrong")
+                return
+            }
+
+            toast.success(
+                `Your ${values.side} order for ${values.quantity} ${values.ticker} (${values.series}) was placed.`
+            )
+
+            form.reset()
+        } catch (err) {
+            console.error("Order error:", err)
+            toast.error("Unexpected error, please try again later.")
+        }
     }
 
-    // If user is not signed in, clicking the button redirects to /auth
     if (!isLoaded) return null;
 
     return (

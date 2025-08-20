@@ -6,8 +6,9 @@ import { useSignIn } from "@clerk/nextjs"
 import { OAuthStrategy } from '@clerk/types'
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
-export default function ContinueScreen() {
+function ContinueScreen() {
     const searchParams = useSearchParams()
     const redirectUrl = searchParams.get("redirect_url") || "/"
 
@@ -65,4 +66,10 @@ export default function ContinueScreen() {
             </p>
         </div>
     )
+}
+
+export default function Auth(){
+    <Suspense>
+        <ContinueScreen/>
+    </Suspense>
 }

@@ -69,7 +69,7 @@ function ContinueScreen() {
 }
 
 export default function Auth(){
-    <Suspense>
+    return <Suspense fallback={<p>Loading profile...</p>}>
         <ContinueScreen/>
     </Suspense>
 }

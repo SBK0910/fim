@@ -4,7 +4,7 @@ import { db } from "@/db/conn"
 import { instrumentsTable } from "@/db/schema"
 import { and, eq } from "drizzle-orm"
 import { Order } from "@/components/order"
-import { TrendingUp, TrendingDown, Calendar, DollarSign, BarChart3, Star, ArrowUpRight, ArrowDownRight } from "lucide-react"
+import { TrendingUp, TrendingDown, Calendar, DollarSign, BarChart3 } from "lucide-react"
 
 export default async function InstrumentDetailPage({
   searchParams,
@@ -21,163 +21,106 @@ export default async function InstrumentDetailPage({
   const isPositiveChange = data.percentChange >= 0
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <div className="container mx-auto px-4 py-8 space-y-8 max-w-7xl">
-        {/* Header Section */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20 backdrop-blur-sm">
-          <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-          <div className="relative p-8">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-primary/10 rounded-xl border border-primary/20">
-                      <BarChart3 className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h1 className="text-4xl font-bold tracking-tight">
-                        {data.ticker}
-                        <span className="text-2xl text-muted-foreground ml-3">({data.series})</span>
-                      </h1>
-                      <p className="text-lg text-muted-foreground mt-1">{data.type} Bond</p>
-                    </div>
-                  </div>
-                  {data.creditRating && (
-                    <div className="flex items-center gap-2">
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <Badge variant="secondary" className="text-sm px-3 py-1.5 font-semibold">
-                        {data.creditRating}
-                      </Badge>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-3">
-                    <DollarSign className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="text-3xl font-bold">₹{data.lastTradePrice?.toLocaleString()}</p>
-                      <p className="text-sm text-muted-foreground">Last Trade Price</p>
-                    </div>
-                  </div>
-                  <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
-                    isPositiveChange 
-                      ? 'bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800' 
-                      : 'bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800'
-                  }`}>
-                    {isPositiveChange ? (
-                      <ArrowUpRight className="h-4 w-4 text-green-600" />
-                    ) : (
-                      <ArrowDownRight className="h-4 w-4 text-red-600" />
-                    )}
-                    <span className={`font-semibold ${
-                      isPositiveChange ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'
-                    }`}>
-                      {data.percentChange}%
-                    </span>
-                  </div>
-                </div>
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8 space-y-6 max-w-6xl">
+        
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-3xl font-bold">{data.ticker}</h1>
+              <span className="text-xl text-muted-foreground">({data.series})</span>
+              {data.creditRating && (
+                <Badge variant="outline">{data.creditRating}</Badge>
+              )}
+            </div>
+            <p className="text-muted-foreground">{data.type} Bond</p>
+            
+            <div className="flex items-center gap-4 mt-4">
+              <div>
+                <p className="text-2xl font-bold">₹{data.lastTradePrice?.toLocaleString()}</p>
+                <p className="text-sm text-muted-foreground">Last Trade Price</p>
               </div>
-
-              <div className="flex gap-3">
-                <Order series={series} ticker={ticker} side="buy" />
-                <Order series={series} ticker={ticker} side="sell" />
+              <div className={`flex items-center gap-1 px-2 py-1 rounded ${
+                isPositiveChange 
+                  ? 'text-green-600 bg-green-50 dark:bg-green-950/20' 
+                  : 'text-red-600 bg-red-50 dark:bg-red-950/20'
+              }`}>
+                {isPositiveChange ? (
+                  <TrendingUp className="h-4 w-4" />
+                ) : (
+                  <TrendingDown className="h-4 w-4" />
+                )}
+                <span className="font-medium">{data.percentChange}%</span>
               </div>
             </div>
           </div>
+
+          <div className="flex gap-3">
+            <Order series={series} ticker={ticker} side="buy" />
+            <Order series={series} ticker={ticker} side="sell" />
+          </div>
         </div>
 
-        {/* OHLC Cards */}
+        {/* OHLC Data */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="group hover:shadow-lg transition-all duration-300 border-l-4 border-l-blue-500">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-1">Open</p>
-                  <p className="text-2xl font-bold">₹{data.open?.toLocaleString()}</p>
-                </div>
-                <div className="p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-                  <TrendingUp className="h-5 w-5 text-blue-600" />
-                </div>
-              </div>
+          <Card>
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground mb-1">Open</p>
+              <p className="text-xl font-semibold">₹{data.open?.toLocaleString()}</p>
             </CardContent>
           </Card>
-
-          <Card className="group hover:shadow-lg transition-all duration-300 border-l-4 border-l-green-500">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-1">High</p>
-                  <p className="text-2xl font-bold text-green-600">₹{data.high?.toLocaleString()}</p>
-                </div>
-                <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
-                  <ArrowUpRight className="h-5 w-5 text-green-600" />
-                </div>
-              </div>
+          <Card>
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground mb-1">High</p>
+              <p className="text-xl font-semibold text-green-600">₹{data.high?.toLocaleString()}</p>
             </CardContent>
           </Card>
-
-          <Card className="group hover:shadow-lg transition-all duration-300 border-l-4 border-l-red-500">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-1">Low</p>
-                  <p className="text-2xl font-bold text-red-600">₹{data.low?.toLocaleString()}</p>
-                </div>
-                <div className="p-3 bg-red-50 dark:bg-red-950/20 rounded-lg">
-                  <ArrowDownRight className="h-5 w-5 text-red-600" />
-                </div>
-              </div>
+          <Card>
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground mb-1">Low</p>
+              <p className="text-xl font-semibold text-red-600">₹{data.low?.toLocaleString()}</p>
             </CardContent>
           </Card>
-
-          <Card className="group hover:shadow-lg transition-all duration-300 border-l-4 border-l-purple-500">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-muted-foreground mb-1">Close</p>
-                  <p className="text-2xl font-bold">₹{data.close?.toLocaleString()}</p>
-                </div>
-                <div className="p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
-                  <BarChart3 className="h-5 w-5 text-purple-600" />
-                </div>
-              </div>
+          <Card>
+            <CardContent className="p-4">
+              <p className="text-sm text-muted-foreground mb-1">Close</p>
+              <p className="text-xl font-semibold">₹{data.close?.toLocaleString()}</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
           {/* Bond Details */}
-          <Card className="lg:col-span-2 hover:shadow-lg transition-all duration-300">
-            <CardHeader className="pb-6">
-              <CardTitle className="text-2xl flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Calendar className="h-5 w-5 text-primary" />
-                </div>
-                Bond Specifications
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5" />
+                Bond Details
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  <div className="p-4 bg-muted/30 rounded-xl border">
-                    <p className="text-sm font-medium text-muted-foreground mb-2">Bond Type</p>
-                    <p className="text-lg font-semibold">{data.type}</p>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Bond Type</p>
+                    <p className="font-medium">{data.type}</p>
                   </div>
-                  <div className="p-4 bg-muted/30 rounded-xl border">
-                    <p className="text-sm font-medium text-muted-foreground mb-2">Face Value</p>
-                    <p className="text-lg font-semibold">₹{data.faceValue?.toLocaleString()}</p>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Face Value</p>
+                    <p className="font-medium">₹{data.faceValue?.toLocaleString()}</p>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="p-4 bg-muted/30 rounded-xl border">
-                    <p className="text-sm font-medium text-muted-foreground mb-2">Coupon Rate</p>
-                    <p className="text-lg font-semibold">{data.couponRate}%</p>
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Coupon Rate</p>
+                    <p className="font-medium">{data.couponRate}%</p>
                   </div>
-                  <div className="p-4 bg-muted/30 rounded-xl border">
-                    <p className="text-sm font-medium text-muted-foreground mb-2">Maturity Date</p>
-                    <p className="text-lg font-semibold">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Maturity Date</p>
+                    <p className="font-medium">
                       {data.maturityDate ? new Date(data.maturityDate).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
@@ -190,45 +133,33 @@ export default async function InstrumentDetailPage({
             </CardContent>
           </Card>
 
-          {/* Trading Statistics */}
-          <Card className="hover:shadow-lg transition-all duration-300">
-            <CardHeader className="pb-6">
-              <CardTitle className="text-xl flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <TrendingUp className="h-5 w-5 text-primary" />
-                </div>
-                Trading Stats
+          {/* Trading Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                Trading Info
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="p-4 bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl border border-primary/20">
-                  <p className="text-sm font-medium text-muted-foreground mb-2">Volume</p>
-                  <p className="text-xl font-bold">{data.volume?.toLocaleString()}</p>
-                </div>
-                <div className="p-4 bg-gradient-to-r from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
-                  <p className="text-sm font-medium text-muted-foreground mb-2">Market Value</p>
-                  <p className="text-xl font-bold text-green-700 dark:text-green-400">₹{data.valueInCrores} Cr</p>
-                </div>
-                {data.creditRating && (
-                  <div className="p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-950/20 dark:to-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-800">
-                    <p className="text-sm font-medium text-muted-foreground mb-2">Credit Rating</p>
-                    <div className="flex items-center gap-2">
-                      <Star className="h-4 w-4 text-yellow-500" />
-                      <p className="text-xl font-bold text-yellow-700 dark:text-yellow-400">{data.creditRating}</p>
-                    </div>
-                  </div>
-                )}
+            <CardContent className="space-y-4">
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Volume</p>
+                <p className="text-lg font-semibold">{data.volume?.toLocaleString()}</p>
               </div>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">Market Value</p>
+                <p className="text-lg font-semibold">₹{data.valueInCrores} Cr</p>
+              </div>
+              {data.creditRating && (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">Credit Rating</p>
+                  <Badge variant="secondary" className="text-sm">{data.creditRating}</Badge>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
 
-        {/* Mobile Trading Buttons */}
-        <div className="lg:hidden flex gap-3 justify-center pt-4">
-          <Order series={series} ticker={ticker} side="buy" />
-          <Order series={series} ticker={ticker} side="sell" />
-        </div>
       </div>
     </div>
   )

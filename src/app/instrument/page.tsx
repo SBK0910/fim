@@ -4,7 +4,7 @@ import { db } from "@/db/conn"
 import { instrumentsTable } from "@/db/schema"
 import { and, eq } from "drizzle-orm"
 import { Order } from "@/components/order"
-import { TrendingUp, TrendingDown, Calendar, DollarSign, BarChart3 } from "lucide-react"
+import { TrendingUp, TrendingDown, Calendar, BarChart3 } from "lucide-react"
 
 export default async function InstrumentDetailPage({
   searchParams,
@@ -17,6 +17,10 @@ export default async function InstrumentDetailPage({
     .select()
     .from(instrumentsTable)
     .where(and(eq(instrumentsTable.ticker, ticker), eq(instrumentsTable.series, series)))
+  
+  if (!data || !data.percentChange){
+    return null
+  }
 
   const isPositiveChange = data.percentChange >= 0
 

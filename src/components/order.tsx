@@ -91,7 +91,7 @@ export function Order({ ticker, series, side }: BuyProps) {
                     className={`font-semibold tracking-tight ${side === "buy"
                         ? "bg-green-500 text-white hover:bg-green-600"
                         : "bg-red-500 text-white hover:bg-red-600"
-                        } md:w-24 w-full cursor-pointer`}
+                        }  md:w-24 w-full cursor-pointer`}
                     onClick={(e) => {
                         if (!isSignedIn) {
                             e.preventDefault();

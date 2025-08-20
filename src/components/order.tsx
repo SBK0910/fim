@@ -26,22 +26,22 @@ import {
 type BuyProps = {
     ticker: string;
     series: string;
-    type: "buy" | "sell"
+    side: "buy" | "sell"
 };
 
-export function Order({ ticker, series, type }: BuyProps) {
+export function Order({ ticker, series, side }: BuyProps) {
     const form = useForm<z.infer<typeof orderFormSchema>>({
         resolver: zodResolver(orderFormSchema),
         defaultValues: {
             quantity: 1,
-            orderType: "market",
+            type: "market",
+            side,
             ticker,
             series,
-            order: type
         },
     });
 
-    const orderType = form.watch("orderType");
+    const orderType = form.watch("type");
 
     function onSubmit(values: z.infer<typeof orderFormSchema>) {
         console.log("Submitting buy order:", values);
@@ -52,17 +52,17 @@ export function Order({ ticker, series, type }: BuyProps) {
         <Dialog>
             <DialogTrigger asChild>
                 <Button
-                    className={`font-semibold tracking-tight ${type === "buy"
+                    className={`font-semibold tracking-tight ${side === "buy"
                         ? "bg-green-500 text-white hover:bg-green-600"
                         : "bg-red-500 text-white hover:bg-red-600"
                         } md:w-24 w-full cursor-poiner`}
                 >
-                    {type === "buy" ? "Buy" : "Sell"}
+                    {side === "buy" ? "Buy" : "Sell"}
                 </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md">
                 <h2 className="text-lg font-bold">
-                    {type === "buy" ? "Buy Order" : "Sell Order"}
+                    {side === "buy" ? "Buy Order" : "Sell Order"}
                 </h2>
                 <Form {...form}>
                     <form
@@ -92,7 +92,7 @@ export function Order({ ticker, series, type }: BuyProps) {
                         {/* Order Type */}
                         <FormField
                             control={form.control}
-                            name="orderType"
+                            name="type"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel className="mb-1 font-semibold">Order Type</FormLabel>
@@ -119,7 +119,7 @@ export function Order({ ticker, series, type }: BuyProps) {
                         {orderType === "limit" && (
                             <FormField
                                 control={form.control}
-                                name="limit"
+                                name="limitPrice"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="mb-1 font-semibold">Limit Price</FormLabel>

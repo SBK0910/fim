@@ -38,8 +38,8 @@ export default async function InstrumentDetailPage({ searchParams }: {
                     </div>
 
                     <div className="hidden md:grid grid-cols-2 gap-2 mt-4 md:mt-0 w-full md:w-fit">
-                        <Order series={series} ticker={ticker} type="buy" />
-                        <Order series={series} ticker={ticker} type="sell" />
+                        <Order series={series} ticker={ticker} side="buy" />
+                        <Order series={series} ticker={ticker} side="sell" />
                     </div>
                 </CardHeader>
             </Card>
@@ -106,8 +106,8 @@ export default async function InstrumentDetailPage({ searchParams }: {
             </Card>
 
             <div className="grid md:hidden grid-cols-2 gap-2 mt-4 md:mt-0 w-full md:w-fit">
-                <Order series={series} ticker={ticker} type="buy" />
-                <Order series={series} ticker={ticker} type="sell" />
+                <Order series={series} ticker={ticker} side="buy" />
+                <Order series={series} ticker={ticker} side="sell" />
             </div>
         </div>
     );

@@ -5,10 +5,8 @@ import { instrumentsTable } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { Order } from "@/components/order";
 
-export default async function InstrumentDetailPage({
-    searchParams,
-}: {
-    searchParams: Promise<{ ticker: string; series: string }>;
+export default async function InstrumentDetailPage({ searchParams }: {
+    searchParams: Promise<{ ticker: string; series: string }>
 }) {
     const { ticker, series } = await searchParams;
 
@@ -22,10 +20,9 @@ export default async function InstrumentDetailPage({
 
     return (
         <div className="p-6 space-y-6 max-w-5xl mx-auto mt-28">
-            {/* Header */}
             <Card>
                 <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between">
-                    <div className="flex flex-row md:items-center md:gap-4">
+                    <div className="flex flex-col md:flex-row md:items-center md:gap-4">
                         <CardTitle className="text-2xl font-bold">
                             {data.ticker} <span className="text-gray-500">({data.series})</span>
                         </CardTitle>
@@ -36,16 +33,14 @@ export default async function InstrumentDetailPage({
                         )}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2 mt-4 md:mt-0 w-full md:w-fit">
+                    <div className="hidden md:grid grid-cols-2 gap-2 mt-4 md:mt-0 w-full md:w-fit">
                         <Order series={series} ticker={ticker} type="buy" />
                         <Order series={series} ticker={ticker} type="sell" />
                     </div>
                 </CardHeader>
             </Card>
 
-            {/* Trading & Bond Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Bond Info */}
                 <Card>
                     <CardHeader>
                         <CardTitle>Bond Details</CardTitle>
@@ -65,7 +60,6 @@ export default async function InstrumentDetailPage({
                     </CardContent>
                 </Card>
 
-                {/* Trading Info */}
                 <Card>
                     <CardHeader>
                         <CardTitle>Trading Info</CardTitle>
@@ -83,7 +77,6 @@ export default async function InstrumentDetailPage({
                 </Card>
             </div>
 
-            {/* OHLC Info */}
             <Card>
                 <CardHeader>
                     <CardTitle>OHLC Data</CardTitle>
@@ -107,6 +100,11 @@ export default async function InstrumentDetailPage({
                     </div>
                 </CardContent>
             </Card>
+
+            <div className="grid md:hidden grid-cols-2 gap-2 mt-4 md:mt-0 w-full md:w-fit">
+                <Order series={series} ticker={ticker} type="buy" />
+                <Order series={series} ticker={ticker} type="sell" />
+            </div>
         </div>
     );
 }

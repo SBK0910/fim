@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     } catch (err) {
         console.error("Order creation error:", err);
 
-        if (err && typeof err === 'object' && err !== null && 'code' in err && (err as { code: string; constraint: string }).code === "23503" && (err as { code: string; constraint: string }).constraint === "fk_orders_instruments") {
+        if (err && typeof err === 'object' && err !== null && 'code' in err && (err as { code: string; constraint: string }).code === "23503" && (err as { code: string; constraint: string }).constraint === "instrument_fk") {
             return NextResponse.json(
                 {
                     error: "Invalid instrument",
@@ -49,6 +49,57 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             );
         }
+
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        );
+    }
+}
+
+export async function PUT(req: NextRequest) {
+    try {
+        const user = await currentUser();
+        if (!user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        const body = await req.json();
+        const { orderId, ...updateFields } = body;
+
+        if (!orderId || typeof orderId !== "string") {
+            return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });
+        }
+
+        const result = orderFormSchema.safeParse(updateFields);
+        if (!result.success) {
+            return NextResponse.json(
+                { error: "Invalid input", details: result.error.format() },
+                { status: 400 }
+            );
+        }
+
+        const updatedOrder = await db
+            .update(ordersTable)
+            .set({
+                ...updateFields,
+            })
+            .where(ordersTable.id.eq(orderId))
+            .returning();
+
+        if (!updatedOrder) {
+            return NextResponse.json(
+                { error: "Order not found" },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json(
+            { message: "Order updated successfully", updatedOrder },
+            { status: 200 }
+        );
+    } catch (err) {
+        console.error("Order update error:", err);
 
         return NextResponse.json(
             { error: "Internal server error" },

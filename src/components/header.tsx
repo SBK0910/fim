@@ -14,9 +14,9 @@ export default function Header() {
   const router = useRouter()
   const { isLoaded, isSignedIn, signOut } = useAuth()
 
-  if (pathname === "/auth/sso-callback") return null
+  if (pathname === "/sso-callback") return null
 
-  const isAuthPage = pathname === "/auth"
+  const isAuthPage = pathname === "/login"
 
   return (
     <header className="fixed top-0 left-4 right-4 z-50 flex justify-between items-center border-b border-gray-200/20 dark:border-gray-700/20 bg-background/80 backdrop-blur-md p-3">
@@ -49,7 +49,7 @@ export default function Header() {
                   signOut()
                   toast("Signed out successfully")
                 } else {
-                  router.push("/auth")
+                  router.push("/login")
                 }
               }}
               disabled={!isLoaded}

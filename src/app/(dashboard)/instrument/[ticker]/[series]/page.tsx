@@ -8,11 +8,12 @@ import BondDetailsCard from "./_components/bond-details"
 import TradingInfoCard from "./_components/trading-info-card"
 
 interface InstrumentPageProps {
-  params: { ticker: string; series: string }
+  params: Promise<{ ticker: string; series: string }>;
 }
 
+
 export default async function InstrumentPage({ params }: InstrumentPageProps) {
-  const { ticker, series } = params
+  const { ticker, series } = await params
 
   const [data] = await db
     .select()

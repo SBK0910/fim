@@ -11,3 +11,17 @@ export type Instrument = {
 	creditRating: string | null
 	maturityDate: string | null
 }
+
+export type Order = {
+  orderId: string;
+  userId: string;
+  ticker: string;
+  series: string;
+  type: "market" | "limit";
+  side: "buy" | "sell";
+  quantity: number;
+  limitPrice?: number | null;
+  status: "pending" | "completed" | "cancelled";
+  createdAt: Date;
+  updatedAt: Date;
+};

@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { TrendingUp } from "lucide-react"
 import { MarketProvider, useMarketContext } from "@/components/providers/market-provider"
 import { DataTable } from "@/components/datatable/data-table"
-import { columns } from "@/components/table/columns"
+import { columns } from "@/components/columns/markets"
 import { useRouter } from "next/navigation"
 
 const queryClient = new QueryClient()

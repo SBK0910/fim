@@ -1,17 +1,21 @@
 "use client"
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import TableContent from "./tableContent"
 import { TrendingUp } from "lucide-react"
+import { MarketProvider, useMarketContext } from "@/components/providers/market-provider"
+import { DataTable } from "@/components/datatable/data-table"
+import { columns } from "@/components/table/columns"
+import { useRouter } from "next/navigation"
 
 const queryClient = new QueryClient()
-
 export default function Home() {
+  const router = useRouter()
   return (
     <QueryClientProvider client={queryClient}>
+      <MarketProvider>
       <div className="min-h-screen bg-background p-4 md:p-6 pt-28 md:pt-20">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-6 p-4 rounded-lg table-gradient card-shadow">
+          <div className="flex items-center justify-between mb-6 p-4 rounded-lg table-gradient">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
                 <TrendingUp className="h-5 w-5 text-primary" />
@@ -26,9 +30,16 @@ export default function Home() {
               <span className="text-xs font-medium text-green-700 dark:text-green-400">Live</span>
             </div>
           </div>
-          <TableContent />
+          <DataTable columns={columns} useDataHook={useMarketContext} onRowClick={(row) => {
+                      const ticker = row.original?.ticker
+                      const series = row.original?.series
+                      if (ticker && series) {
+                        router.push(`/instrument?ticker=${ticker}&series=${series}`)
+                      }
+                    }}/>
         </div>
       </div>
+      </MarketProvider>
     </QueryClientProvider>
   )
 }

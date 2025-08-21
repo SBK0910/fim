@@ -28,7 +28,7 @@ export interface DataTableHookResult<T> {
 }
 
 interface DataTableProps<T> {
-  columns: ColumnDef<T, any>[]
+  columns: ColumnDef<T, any>[] // eslint-disable-line
   useDataHook: () => DataTableHookResult<T>
   onRowClick?: (row: Row<T>) => void
 }

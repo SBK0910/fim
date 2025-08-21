@@ -18,13 +18,11 @@ export async function GET(req: NextRequest) {
 
 		const offset = (page - 1) * limit;
 
-		// Get total count
 		const countResult = await db
 			.select({ count: count() })
 			.from(instrumentsTable);
 		const total = countResult[0]?.count ?? 0;
 
-		// Fetch paginated instruments
 		const instruments = await db
 			.select()
 			.from(instrumentsTable)

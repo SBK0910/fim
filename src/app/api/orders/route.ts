@@ -1,6 +1,6 @@
 import { db } from "@/db/conn";
 import { ordersTable } from "@/db/schema";
-import { count, eq } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { orderFormSchema } from "@/lib/schema";
@@ -91,7 +91,8 @@ export async function GET(req: NextRequest) {
 			.from(ordersTable)
 			.where(eq(ordersTable.userId, user.id))
 			.limit(limit)
-			.offset(offset);
+			.offset(offset)
+			.orderBy(desc(ordersTable.createdAt));
 
 		return NextResponse.json(
 			{

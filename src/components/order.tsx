@@ -24,7 +24,7 @@ import {
     SelectValue,
 } from "./ui/select";
 import { useAuth } from "@clerk/nextjs";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 type BuyProps = {
@@ -35,13 +35,10 @@ type BuyProps = {
 
 export function Order({ ticker, series, side }: BuyProps) {
     const { isLoaded, isSignedIn } = useAuth();
+
     const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
 
     const [open, setOpen] = useState(false);
-
-    const currentFullPath = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '')
 
     const form = useForm<z.infer<typeof orderFormSchema>>({
         resolver: zodResolver(orderFormSchema),
@@ -95,7 +92,7 @@ export function Order({ ticker, series, side }: BuyProps) {
                     onClick={(e) => {
                         if (!isSignedIn) {
                             e.preventDefault();
-                            router.push(`/auth?redirect_url=${encodeURIComponent(currentFullPath)}`)
+                            router.push(`/auth?redirect_url=${encodeURIComponent(`/instruments/${ticker}/${series}`)}`)
                         }
                     }}
                 >

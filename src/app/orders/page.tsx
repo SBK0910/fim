@@ -17,7 +17,6 @@ export default function OrdersPage() {
       <OrdersProvider>
         <div className="min-h-screen bg-background p-4 md:p-6 pt-28 md:pt-20">
           <div className="max-w-7xl mx-auto">
-            {/* Header */}
             <div className="flex items-center justify-between mb-6 p-4 rounded-lg table-gradient">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/10 rounded-lg">
@@ -30,7 +29,6 @@ export default function OrdersPage() {
               </div>
             </div>
 
-            {/* Data Table */}
             <DataTable
               columns={orderColumns}
               useDataHook={useOrdersContext}

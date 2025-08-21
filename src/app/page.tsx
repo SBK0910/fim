@@ -34,7 +34,7 @@ export default function Home() {
                       const ticker = row.original?.ticker
                       const series = row.original?.series
                       if (ticker && series) {
-                        router.push(`/instrument?ticker=${ticker}&series=${series}`)
+                        router.push(`/instrument/${ticker}/${series}`)
                       }
                     }}/>
         </div>

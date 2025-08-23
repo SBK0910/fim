@@ -4,7 +4,10 @@ const isPublicRoute = createRouteMatcher([
     '/login(.*)',
     '/sso-callback',
     '/api/market',
-    '/instrument'
+    '/api/orders',
+    '/instrument',
+    '/',
+    '/orders',
 ])
 
 export default clerkMiddleware(

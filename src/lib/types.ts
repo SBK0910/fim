@@ -1,27 +1,22 @@
-export type Instrument = {
-	ticker: string
-	series: string
-	type: "Regular" | "Zero-Coupon" | "Floating" | "Other" | null
-	couponRate: number | null
-	faceValue: number | null
-	lastTradePrice: number | null
-	percentChange: number | null
-	volume: number | null
-	valueInCrores: number | null
-	creditRating: string | null
-	maturityDate: string | null
+import z from "zod";
+import { instrumentSchema, orderFormSchema, orderSchema, paginationSchema } from "./schema";
+
+export type OrderForm = z.infer<typeof orderFormSchema>;
+export type Instrument = z.infer<typeof instrumentSchema>;
+export type Pagination = z.infer<typeof paginationSchema>;
+export type Order = z.infer<typeof orderSchema>;
+
+
+export type CreateDataContextProps<T> = {
+    queryKey: string,
+    queryFn: (page: number, limit: number) => Promise<{data: T[], pagination: Pagination}>
 }
 
-export type Order = {
-  orderId: string;
-  userId: string;
-  ticker: string;
-  series: string;
-  type: "market" | "limit";
-  side: "buy" | "sell";
-  quantity: number;
-  limitPrice?: number | null;
-  status: "pending" | "completed" | "cancelled";
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type DataContextType<T> = {
+    data: T[];
+    pagination: Pagination;
+    setPagination: React.Dispatch<React.SetStateAction<Pagination>>;
+    isLoading: boolean;
+    isError: boolean;
+    error: Error | null;
+}

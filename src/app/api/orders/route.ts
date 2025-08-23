@@ -2,7 +2,7 @@ import { db } from "@/db/conn";
 import { ordersTable } from "@/db/schema";
 import { count, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { orderFormSchema } from "@/lib/schema";
 
 export async function POST(req: NextRequest) {
@@ -24,13 +24,13 @@ export async function POST(req: NextRequest) {
 		const order = await db
 			.insert(ordersTable)
 			.values({
-				quantity: result.data.quantity.toString(),
+				quantity: result.data.quantity,
 				series: result.data.series,
 				side: result.data.side,
 				ticker: result.data.ticker,
 				type: result.data.type,
 				userId: user.id,
-				limitPrice: result.data.limitPrice?.toString()
+				limitPrice: result.data.limitPrice
 			})
 			.returning();
 
@@ -61,8 +61,8 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
 	try {
-		const user = await currentUser();
-		if (!user) {
+		const user = await auth();
+		if (!user || !user.userId) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
@@ -82,20 +82,19 @@ export async function GET(req: NextRequest) {
 		const countResult = await db
 			.select({ count: count() })
 			.from(ordersTable)
-			.where(eq(ordersTable.userId, user.id));
+			.where(eq(ordersTable.userId, user.userId));
 
 		const total = Number(countResult[0]?.count ?? 0);
 
 		const orders = await db
 			.select()
 			.from(ordersTable)
-			.where(eq(ordersTable.userId, user.id))
+			.where(eq(ordersTable.userId, user.userId))
 			.limit(limit)
 			.offset(offset);
 
 		return NextResponse.json(
 			{
-				success: true,
 				data: orders,
 				pagination: {
 					page,

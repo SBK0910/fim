@@ -1,8 +1,22 @@
 "use client";
 
-import { CreateDataContextProps, DataContextType, Pagination } from "@/lib/types";
+import { Pagination } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useState } from "react";
+
+export type CreateDataContextProps<T> = {
+    queryKey: string,
+    queryFn: (page: number, limit: number, headers?: HeadersInit) => Promise<{data: T[], pagination: Pagination}>
+}
+
+export type DataContextType<T> = {
+    data: T[];
+    pagination: Pagination;
+    setPagination: React.Dispatch<React.SetStateAction<Pagination>>;
+    isLoading: boolean;
+    isError: boolean;
+    error: Error | null;
+}
 
 export function createDataContext<T>({queryKey, queryFn}: CreateDataContextProps<T>) {
     const DataContext = createContext<DataContextType<T> | undefined>(undefined);

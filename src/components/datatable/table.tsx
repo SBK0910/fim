@@ -11,7 +11,7 @@ import { useMemo } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Skeleton } from "../ui/skeleton"
 import PaginationControls from "./pagination"
-import { DataContextType} from "@/lib/types"
+import { DataContextType} from "@/components/providers/datacontext"
 
 
 interface DataTableProps<T> {

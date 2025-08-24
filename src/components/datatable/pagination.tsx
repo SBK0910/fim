@@ -3,7 +3,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "../ui/button"
 import { Pagination, PaginationContent, PaginationItem } from "../ui/pagination"
-import { DataContextType } from "@/lib/types"
+import { DataContextType } from "@/components/providers/datacontext"
 
 interface PaginationControlsProps<T> {
 	useDataHook: () => DataContextType<T>

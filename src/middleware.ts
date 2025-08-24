@@ -1,20 +1,33 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
-const isPublicRoute = createRouteMatcher([
+const isPublicPageRoute = createRouteMatcher([
     '/login(.*)',
     '/sso-callback',
+    '/instrument/(.*)',
+    '/'
+])
+
+const isPublicApiRoute = createRouteMatcher([
     '/api/market',
-    '/api/orders',
-    '/instrument',
-    '/',
-    '/orders',
 ])
 
 export default clerkMiddleware(
     async (auth, req) => {
-        if (!isPublicRoute(req)) {
-            const { userId, redirectToSignIn } = await auth()
-            if (!userId){
+        const isApiRoute = new URL(req.url).pathname.startsWith("/api")
+        if (isApiRoute) {
+            if (!isPublicApiRoute(req)) {
+                const { userId } = await auth()
+                if (!userId) {
+                    return NextResponse.json({ message: "Unauthorized" }, { status: 401 } )
+                }
+            }
+            return NextResponse.next()  
+        }
+
+        if (!isPublicPageRoute(req)){
+            const { userId, redirectToSignIn} = await auth()
+            if (!userId) {
                 return redirectToSignIn()
             }
         }

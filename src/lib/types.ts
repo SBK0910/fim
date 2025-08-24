@@ -9,7 +9,7 @@ export type Order = z.infer<typeof orderSchema>;
 
 export type CreateDataContextProps<T> = {
     queryKey: string,
-    queryFn: (page: number, limit: number) => Promise<{data: T[], pagination: Pagination}>
+    queryFn: (page: number, limit: number, headers?: HeadersInit) => Promise<{data: T[], pagination: Pagination}>
 }
 
 export type DataContextType<T> = {

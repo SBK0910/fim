@@ -1,10 +1,10 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 import { FileText } from "lucide-react"
-import OrdersData from "@/app/_components/orders/orders-data"
 import getQueryClient from "@/components/getQueryClient"
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
 import { fetchOrders } from "@/lib/queries"
+import OrdersTable from "./ordersTable"
 
 export default async function OrdersPage() {
 	const { getToken } = await auth()
@@ -38,8 +38,7 @@ export default async function OrdersPage() {
 							</div>
 						</div>
 					</div>
-
-					<OrdersData />
+					<OrdersTable />
 				</div>
 			</div>
 		</HydrationBoundary>

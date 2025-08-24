@@ -7,7 +7,7 @@ const columnHelper = createColumnHelper<Order>()
 const titleCase = (str: string) =>
 	str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 
-export const columns = [
+export const ordersColumns = [
 	columnHelper.accessor("ticker", {
 		header: () => (
 			<div className="px-3 py-3 text-sm font-medium">Ticker</div>

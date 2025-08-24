@@ -4,7 +4,7 @@ import { Instrument } from "@/lib/types"
 
 const columnHelper = createColumnHelper<Instrument>()
 
-export const columns = [
+export const marketColumns = [
 	columnHelper.accessor("ticker", {
 		header: () => (
 			<Button variant="ghost" className="px-3 py-6 text-sm font-medium">

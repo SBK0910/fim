@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 import { TrendingUp } from "lucide-react"
 import { fetchMarket } from "@/lib/queries"
-import MarketData from "./_components/market /market-data"
+import MarketData from "../_components/market /market-data"
 import getQueryClient from "@/components/getQueryClient"
 
 export default async function Home() {

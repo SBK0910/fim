@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { TrendingUp, TrendingDown } from "lucide-react"
-import { Order } from "@/components/order"
+import OrderDialog from "@/components/orderDialog"
 
 interface InstrumentHeaderProps {
   ticker: string
@@ -42,8 +42,8 @@ export default function InstrumentHeader({
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <Order series={series} ticker={ticker} side="buy" />
-        <Order series={series} ticker={ticker} side="sell" />
+        <OrderDialog series={series} ticker={ticker} side="buy" />
+        <OrderDialog series={series} ticker={ticker} side="sell" />
       </div>
     </div>
   )

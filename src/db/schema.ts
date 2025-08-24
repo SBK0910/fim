@@ -104,11 +104,11 @@ export const ordersTable = pgTable("orders", {
     series: char("series", { length: 2 }).notNull(),
     type: orderTypeEnum().notNull(),
     side: orderSideEnum().notNull(),
-    quantity: numeric("quantity", { precision: 12, scale: 0 }).notNull(),
-    limitPrice: numeric("limit_price", { precision: 12, scale: 2 }),
-    status: orderStatusEnum().default("pending"),
-    createdAt: timestamp("created_at").default(sql`now()`),
-    updatedAt: timestamp("updated_at").default(sql`now()`),
+    quantity: numeric({ mode:"number",precision: 12, scale: 0 }).notNull(),
+    limitPrice: numeric({ mode:"number",precision: 12, scale: 2 }),
+    status: orderStatusEnum().default("pending").notNull(),
+    createdAt: timestamp("created_at").default(sql`now()`).notNull(),
+    updatedAt: timestamp("updated_at").default(sql`now()`).notNull(),
 }, (table) => [
     check("quantity_positive", sql`quantity > 0`),
     check(

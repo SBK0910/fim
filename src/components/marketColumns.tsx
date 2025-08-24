@@ -1,17 +1,18 @@
 import { createColumnHelper } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { Instrument } from "@/lib/types"
+import Link from "next/link"
 
 const columnHelper = createColumnHelper<Instrument>()
 
-export const columns = [
+export const marketColumns = [
 	columnHelper.accessor("ticker", {
 		header: () => (
 			<Button variant="ghost" className="px-3 py-6 text-sm font-medium">
 				Ticker
 			</Button>
 		),
-		cell: ({ row }) => <div className="px-3">{row.original.ticker}</div>,
+		cell: ({ row }) => <Link href={`/instrument/${row.original.ticker}/${row.original.series}`} className="px-3">{row.original.ticker}</Link>
 	}),
 	columnHelper.accessor("series", {
 		header: () => (

@@ -5,11 +5,16 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
-export async function POST(req: NextRequest, { params }: { params: { ticker: string; series: string, side: "buy" | "sell" } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ ticker: string; series: string; side: string }> }) {
     try {
         const { userId } = await auth();
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        const resolvedParams = await params;
+
+        if (resolvedParams.side !== "buy" && resolvedParams.side !== "sell") {
+            return NextResponse.json({ error: "Invalid side parameter" }, { status: 400 });
         }
 
         const body = await req.json();
@@ -25,9 +30,9 @@ export async function POST(req: NextRequest, { params }: { params: { ticker: str
             .insert(ordersTable)
             .values({
                 quantity: result.data.quantity,
-                series: params.series,
-                side: params.side,
-                ticker: params.ticker,
+                series: resolvedParams.series,
+                side: resolvedParams.side,
+                ticker: resolvedParams.ticker,
                 type: result.data.type,
                 userId: userId,
                 limitPrice: result.data.limitPrice
